@@ -74,7 +74,7 @@ const Register_page = () => {
           </form>
           <div className="flex gap-2 items-center justify-center w-full mt-3">
             <h1 className="text-white">Already Have an account?</h1>
-            <button className="text-blue-800 font-semibold hover:underline">
+            <button className="text-blue-400 font-medium hover:underline">
               Sign in
             </button>
           </div>
