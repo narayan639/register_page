@@ -2,13 +2,23 @@ import { Label } from "@radix-ui/react-label";
 import { Asterisk, MoveRight } from "lucide-react";
 import React from "react";
 import { Input } from "./input";
-import { Form_req } from "@/app/data/data";
+import { Form_req, SignUpSchema, SignUpSchemaType } from "@/app/data/data";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SubmitHandler, useForm } from "react-hook-form";
 const Register_page = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignUpSchemaType>({ resolver: zodResolver(SignUpSchema) });
+  const onSubmit: SubmitHandler<SignUpSchemaType> = (data) => {
+    console.log(data);
+  };
   return (
-    <main className="bg-[#38c0faf3]">
+    <main className="bg-[#224f5ef3]">
       <section className="h-[100vh] w-full bg-black/50 flex items-center justify-center relative overflow-hidden md:rounded-br-[40%]">
         <div className="absolute top-10 left-0 flex-col h-[100vh] lg:w-[350px] xl:w-[450px] items-center justify-start p-5 gap-4 hidden lg:flex">
-          <div className="h-[120px] w-[120px] rounded-full overflow-hidden">
+          <div className="h-[120px] w-[120px] rounded-[50%] overflow-hidden">
             <img
               className="w-full h-full object-cover"
               src="https://banshwali-full.vercel.app/logo.png"
@@ -29,25 +39,35 @@ const Register_page = () => {
           <h1 className="text-[7vw] sm:text-[3.2vw] md:text-[2vw] pb-2 font-bold border-b-2 border-[#38c0faf3] text-white">
             Create Account
           </h1>
-          <form action="" className="flex flex-col gap-3 mt-2 relative z-[999]">
-            {Form_req?.map((item, index) => (
-              <div key={index} className="flex flex-col gap-1">
-                <Label
-                  htmlFor={item.name}
-                  className="flex gap-1 font-medium text-white"
-                >
-                  <p>{item.title}</p>
-                  <span className="text-red-500">
-                    <Asterisk size={14} />
-                  </span>
-                </Label>
-                <Input
-                  type="email"
-                  placeholder={item.placeholder}
-                  className="border-2 rounded-lg outline-none"
-                />
-              </div>
-            ))}
+          <form
+            onClick={handleSubmit(onSubmit)}
+            className="flex flex-col gap-3 mt-2 relative z-[999]"
+          >
+            {Form_req?.map((item, index) => {
+               type FieldName = keyof SignUpSchemaType;
+               const fieldname = item?.name as FieldName
+              const{name,title,placeholder}=item
+              return (
+                <div key={index} className="flex flex-col gap-1">
+                  <Label
+                    htmlFor={name}
+                    className="flex gap-1 font-medium text-white"
+                  >
+                    <p>{title}</p>
+                    <span className="text-red-500">
+                      <Asterisk size={14} />
+                    </span>
+                  </Label>
+                  <Input
+                    type="text"
+                    id={name}
+                    {...register(fieldname)}
+                    placeholder={placeholder}
+                    className="border-2 rounded-lg outline-none"
+                  />
+                </div>
+              );
+            })}
             <button className="bg-[#38c0faf3] text-white mt-2 p-2 rounded-md flex items-center gap-2 justify-center hover:bg-[#64b7da]">
               Continue <MoveRight size={20} />
             </button>
